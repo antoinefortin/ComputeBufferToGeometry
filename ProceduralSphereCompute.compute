@@ -1,0 +1,23 @@
+#pragma kernel CSMain
+
+RWStructuredBuffer<float3> Result;
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    // Calculate UV coordinates for this thread
+    float u = id.x / 255.0;
+    float v = id.y / 255.0;
+
+    // Calculate sphere position based on UV coordinates
+    float phi = u * 2.0 * 3.14159;
+    float theta = v * 3.14159;
+
+    float3 pos;
+    pos.x = cos(phi) * sin(theta);
+    pos.y = cos(theta);
+    pos.z = sin(phi) * sin(theta);
+
+    // Write position to the output buffer
+    Result[id.x + id.y * 256] = pos;
+}
